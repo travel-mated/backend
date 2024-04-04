@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    include:
+      - database
+    active : local
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
