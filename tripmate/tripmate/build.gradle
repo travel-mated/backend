@@ -22,10 +22,18 @@ repositories {
 }
 
 dependencies {
+	//SpringBoot
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//롬복
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//DB
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	//Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
