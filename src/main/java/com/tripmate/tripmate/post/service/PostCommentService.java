@@ -23,9 +23,9 @@ public class PostCommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public PostCommentResponse createPostComment(final Long postId,
-                                                 final Long userId,
-                                                 final PostCommentRequest request) {
+    public PostCommentResponse create(final Long userId,
+                                      final Long postId,
+                                      final PostCommentRequest request) {
         validateExistPost(postId);
         User user = userRepository.getById(userId);
 
@@ -45,11 +45,11 @@ public class PostCommentService {
     }
 
     @Transactional
-    public void deletePostComment(final Long userId, final Long postCommentId) {
+    public void delete(final Long userId, final Long postCommentId) {
         User user = userRepository.getById(userId);
         PostComment comment = postCommentRepository.getById(postCommentId);
 
-        validateSameOwner(user, comment);  //글쓴이가 맞는지
+        validateSameOwner(user, comment);
         postCommentRepository.delete(comment);
     }
 
@@ -60,12 +60,12 @@ public class PostCommentService {
     }
 
     @Transactional
-    public void updatePostComment(final Long userId,
-                                  final Long postCommentId,
-                                  final PostCommentRequest request) {
+    public PostCommentResponse update(final Long userId,
+                                      final Long postCommentId,
+                                      final PostCommentRequest request) {
         User user = userRepository.getById(userId);
         PostComment comment = postCommentRepository.getById(postCommentId);
-
         comment.updateContent(request.contents(), user);
+        return PostCommentResponse.from(comment);
     }
 }
