@@ -28,9 +28,9 @@ public class PostCommentService {
                                       final PostCommentRequest request) {
         validateExistPost(postId);
         User user = userRepository.getById(userId);
-
         PostComment postComment = new PostComment(postId, user, request.contents());
-        if (postComment.isChildComment()) {
+
+        if (hasParentComment(request.parentCommentId())) {
             PostComment parentComment = postCommentRepository.getById(request.parentCommentId());
             parentComment.addCommentReply(postComment);
         }
@@ -42,6 +42,10 @@ public class PostCommentService {
         if (!postRepository.existsById(postId)) {
             throw new CustomException(HttpStatus.NOT_FOUND, ResultCode.POST_NOT_FOUND);
         }
+    }
+
+    public boolean hasParentComment(Long parentId) {
+        return parentId != null;
     }
 
     @Transactional

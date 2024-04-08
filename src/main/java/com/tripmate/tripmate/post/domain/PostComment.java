@@ -69,11 +69,6 @@ public class PostComment extends BaseTimeEntity {
         }
         this.contents = contents;
     }
-
-    public boolean isChildComment() {
-        return parentComment != null;
-    }
-
     public boolean isOwner(User user) {
         return this.user.equals(user);
     }
