@@ -1,4 +1,4 @@
-package com.tripmate.tripmate.domain.user;
+package com.tripmate.tripmate.user.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
