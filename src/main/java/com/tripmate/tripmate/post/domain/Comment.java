@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostComment extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +28,10 @@ public class PostComment extends BaseTimeEntity {
     private Long postId;
 
     @ManyToOne
-    private PostComment parentComment;
+    private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostComment> childComment = new ArrayList<>();
+    private List<Comment> childComment = new ArrayList<>();
 
     @ManyToOne
     private User user;
@@ -40,7 +40,7 @@ public class PostComment extends BaseTimeEntity {
     private String contents;
 
     @Builder
-    public PostComment(Long postId, PostComment parentComment, List<PostComment> childComment, User user, String contents) {
+    public Comment(Long postId, Comment parentComment, List<Comment> childComment, User user, String contents) {
         this.postId = postId;
         this.parentComment = parentComment;
         this.user = user;
@@ -48,17 +48,17 @@ public class PostComment extends BaseTimeEntity {
         this.contents = contents;
     }
 
-    public PostComment(Long postId, User user, String contents) {
+    public Comment(Long postId, User user, String contents) {
         this.postId = postId;
         this.user = user;
         this.contents = contents;
     }
 
-    public void setParentComment(PostComment parentComment) {
+    public void setParentComment(Comment parentComment) {
         this.parentComment = parentComment;
     }
 
-    public void addCommentReply(PostComment reply) {
+    public void addCommentReply(Comment reply) {
         this.childComment.add(reply);
         reply.setParentComment(this);
     }

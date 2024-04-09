@@ -1,9 +1,9 @@
 package com.tripmate.tripmate.post.api;
 
 import com.tripmate.tripmate.common.ResponseForm;
-import com.tripmate.tripmate.post.dto.request.PostCommentRequest;
+import com.tripmate.tripmate.post.dto.request.CommentRequest;
 import com.tripmate.tripmate.post.dto.response.PostCommentResponse;
-import com.tripmate.tripmate.post.service.PostCommentService;
+import com.tripmate.tripmate.post.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/posts/{post-id}/coments")
-public class PostCommentController {
+public class CommentController {
 
-    private final PostCommentService postCommentService;
+    private final CommentService commentService;
 
     @PostMapping
     public ResponseForm<PostCommentResponse> create(@PathVariable("post-id") Long postId,
                                                     Long userId,
-                                                    @Valid @RequestBody PostCommentRequest request) {
-        return new ResponseForm<>(postCommentService.create(postId, userId, request));
+                                                    @Valid @RequestBody CommentRequest request) {
+        return new ResponseForm<>(commentService.create(postId, userId, request));
     }
 
 
@@ -27,9 +27,9 @@ public class PostCommentController {
     public ResponseForm<PostCommentResponse> update(
             Long userId,
             @PathVariable("comment-id") Long commentId,
-            @Valid @RequestBody PostCommentRequest request
+            @Valid @RequestBody CommentRequest request
     ) {
-        return new ResponseForm<>(postCommentService.update(userId, commentId, request));
+        return new ResponseForm<>(commentService.update(userId, commentId, request));
     }
 
 
@@ -38,7 +38,7 @@ public class PostCommentController {
             Long userId,
             @PathVariable("comment-id") Long commentId
     ) {
-        postCommentService.delete(userId, commentId);
+        commentService.delete(userId, commentId);
         return new ResponseForm<>();
     }
 }

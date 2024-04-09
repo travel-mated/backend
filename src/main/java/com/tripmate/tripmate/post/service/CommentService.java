@@ -2,10 +2,10 @@ package com.tripmate.tripmate.post.service;
 
 import com.tripmate.tripmate.common.CustomException;
 import com.tripmate.tripmate.common.ResultCode;
-import com.tripmate.tripmate.post.domain.PostComment;
-import com.tripmate.tripmate.post.dto.request.PostCommentRequest;
+import com.tripmate.tripmate.post.domain.Comment;
+import com.tripmate.tripmate.post.dto.request.CommentRequest;
 import com.tripmate.tripmate.post.dto.response.PostCommentResponse;
-import com.tripmate.tripmate.post.repository.PostCommentRepository;
+import com.tripmate.tripmate.post.repository.CommentRepository;
 import com.tripmate.tripmate.post.repository.PostRepository;
 import com.tripmate.tripmate.user.domain.User;
 import com.tripmate.tripmate.user.repository.UserRepository;
@@ -16,26 +16,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PostCommentService {
+public class CommentService {
 
-    private final PostCommentRepository postCommentRepository;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
     @Transactional
     public PostCommentResponse create(final Long userId,
                                       final Long postId,
-                                      final PostCommentRequest request) {
+                                      final CommentRequest request) {
         validateExistPost(postId);
         User user = userRepository.getById(userId);
-        PostComment postComment = new PostComment(postId, user, request.contents());
+        Comment comment = new Comment(postId, user, request.contents());
 
         if (hasParentComment(request.parentCommentId())) {
-            PostComment parentComment = postCommentRepository.getById(request.parentCommentId());
-            parentComment.addCommentReply(postComment);
+            Comment parentComment = commentRepository.getById(request.parentCommentId());
+            parentComment.addCommentReply(comment);
         }
 
-        return PostCommentResponse.from(postCommentRepository.save(postComment));
+        return PostCommentResponse.from(commentRepository.save(comment));
     }
 
     public void validateExistPost(final Long postId) {
@@ -51,13 +51,13 @@ public class PostCommentService {
     @Transactional
     public void delete(final Long userId, final Long postCommentId) {
         User user = userRepository.getById(userId);
-        PostComment comment = postCommentRepository.getById(postCommentId);
+        Comment comment = commentRepository.getById(postCommentId);
 
         validateSameOwner(user, comment);
-        postCommentRepository.delete(comment);
+        commentRepository.delete(comment);
     }
 
-    private void validateSameOwner(final User user, final PostComment comment) {
+    private void validateSameOwner(final User user, final Comment comment) {
         if (!comment.isOwner(user)) {
             throw new CustomException(HttpStatus.BAD_REQUEST, ResultCode.POST_COMMENT_NOT_WRITER);
         }
@@ -66,9 +66,9 @@ public class PostCommentService {
     @Transactional
     public PostCommentResponse update(final Long userId,
                                       final Long postCommentId,
-                                      final PostCommentRequest request) {
+                                      final CommentRequest request) {
         User user = userRepository.getById(userId);
-        PostComment comment = postCommentRepository.getById(postCommentId);
+        Comment comment = commentRepository.getById(postCommentId);
         comment.updateContent(request.contents(), user);
         return PostCommentResponse.from(comment);
     }
