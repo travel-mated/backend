@@ -2,15 +2,20 @@ spring:
   profiles:
     include:
       - database
+      - oauth2
     active : local
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
 
+  jwt:
+    secret : vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
+
 logging:
   level:
     org.hibernate.SQL: debug
+
