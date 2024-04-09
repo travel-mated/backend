@@ -28,4 +28,9 @@ public class CommentLikeService {
                 .user(user)
                 .build());
     }
+
+    @Transactional
+    public void delete(Long commentId, Long userId) {
+        commentLikeRepository.deleteByCommentIdAndUserId(commentId, userId);
+    }
 }
