@@ -2,6 +2,7 @@ package com.tripmate.tripmate.post.service;
 
 import com.tripmate.tripmate.post.domain.Comment;
 import com.tripmate.tripmate.post.domain.CommentLike;
+import com.tripmate.tripmate.post.dto.response.CommentLikeResponse;
 import com.tripmate.tripmate.post.repository.CommentLikeRepository;
 import com.tripmate.tripmate.post.repository.CommentRepository;
 import com.tripmate.tripmate.user.domain.User;
@@ -19,10 +20,11 @@ public class CommentLikeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void create(Long comentId, Long userId) {
-        Comment comment = commentRepository.getById(comentId);
+    public void create(Long commentId, Long userId) {
+        Comment comment = commentRepository.getById(commentId);
         User user = userRepository.getById(userId);
 
+        comment.increaseLike();
         commentLikeRepository.save(CommentLike.builder()
                 .comment(comment)
                 .user(user)
@@ -31,6 +33,16 @@ public class CommentLikeService {
 
     @Transactional
     public void delete(Long commentId, Long userId) {
-        commentLikeRepository.deleteByCommentIdAndUserId(commentId, userId);
+        Comment comment = commentRepository.getById(commentId);
+        User user = userRepository.getById(userId);
+
+        comment.reduceLike();
+        commentLikeRepository.deletByCommentAndUser(comment, user);
+    }
+
+    @Transactional
+    public CommentLikeResponse get(Long commentId) {
+        Comment comment = commentRepository.getById(commentId);
+        return new CommentLikeResponse(comment.getLikeCount());
     }
 }

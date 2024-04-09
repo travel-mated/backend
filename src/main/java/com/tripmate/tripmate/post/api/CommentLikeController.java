@@ -1,6 +1,7 @@
 package com.tripmate.tripmate.post.api;
 
 import com.tripmate.tripmate.common.ResponseForm;
+import com.tripmate.tripmate.post.dto.response.CommentLikeResponse;
 import com.tripmate.tripmate.post.service.CommentLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,5 +23,10 @@ public class CommentLikeController {
     public ResponseForm<Void> delete(@PathVariable("comment-id") Long comentId, Long userId) {
         commentLikeService.delete(comentId, userId);
         return new ResponseForm<>();
+    }
+
+    @GetMapping
+    public ResponseForm<CommentLikeResponse> get(@PathVariable("comment-id") Long comentId) {
+        return new ResponseForm<>(commentLikeService.get(comentId));
     }
 }
