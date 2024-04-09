@@ -4,7 +4,7 @@ import com.tripmate.tripmate.common.CustomException;
 import com.tripmate.tripmate.common.ResultCode;
 import com.tripmate.tripmate.post.domain.Comment;
 import com.tripmate.tripmate.post.dto.request.CommentRequest;
-import com.tripmate.tripmate.post.dto.response.PostCommentResponse;
+import com.tripmate.tripmate.post.dto.response.CommentResponse;
 import com.tripmate.tripmate.post.repository.CommentRepository;
 import com.tripmate.tripmate.post.repository.PostRepository;
 import com.tripmate.tripmate.user.domain.User;
@@ -23,9 +23,9 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public PostCommentResponse create(final Long userId,
-                                      final Long postId,
-                                      final CommentRequest request) {
+    public CommentResponse create(final Long userId,
+                                  final Long postId,
+                                  final CommentRequest request) {
         validateExistPost(postId);
         User user = userRepository.getById(userId);
         Comment comment = new Comment(postId, user, request.contents());
@@ -35,7 +35,7 @@ public class CommentService {
             parentComment.addCommentReply(comment);
         }
 
-        return PostCommentResponse.from(commentRepository.save(comment));
+        return CommentResponse.from(commentRepository.save(comment));
     }
 
     public void validateExistPost(final Long postId) {
@@ -64,12 +64,12 @@ public class CommentService {
     }
 
     @Transactional
-    public PostCommentResponse update(final Long userId,
-                                      final Long postCommentId,
-                                      final CommentRequest request) {
+    public CommentResponse update(final Long userId,
+                                  final Long postCommentId,
+                                  final CommentRequest request) {
         User user = userRepository.getById(userId);
         Comment comment = commentRepository.getById(postCommentId);
         comment.updateContent(request.contents(), user);
-        return PostCommentResponse.from(comment);
+        return CommentResponse.from(comment);
     }
 }

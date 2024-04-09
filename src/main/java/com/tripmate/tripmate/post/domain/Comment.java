@@ -6,10 +6,7 @@ import com.tripmate.tripmate.common.CustomException;
 import com.tripmate.tripmate.common.ResultCode;
 import com.tripmate.tripmate.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -17,12 +14,14 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "POST_COMMENT_ID")
+    @Column(name = "COMMENT_ID")
     private Long id;
 
     private Long postId;
@@ -39,14 +38,7 @@ public class Comment extends BaseTimeEntity {
     @Column(length = 500, nullable = false)
     private String contents;
 
-    @Builder
-    public Comment(Long postId, Comment parentComment, List<Comment> childComment, User user, String contents) {
-        this.postId = postId;
-        this.parentComment = parentComment;
-        this.user = user;
-        this.childComment = childComment;
-        this.contents = contents;
-    }
+    private int likeCount = 0;
 
     public Comment(Long postId, User user, String contents) {
         this.postId = postId;
@@ -71,5 +63,13 @@ public class Comment extends BaseTimeEntity {
     }
     public boolean isOwner(User user) {
         return this.user.equals(user);
+    }
+
+    public void increaseLike() {
+        this.likeCount++;
+    }
+
+    public void reduceLike() {
+        this.likeCount--;
     }
 }
