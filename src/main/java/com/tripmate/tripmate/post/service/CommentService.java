@@ -69,7 +69,7 @@ public class CommentService {
                                   final CommentRequest request) {
         User user = userRepository.getById(userId);
         Comment comment = commentRepository.getById(postCommentId);
-        comment.updateContent(request.contents(), user);
+        comment.updateContents(request.contents(), user);
         return CommentResponse.from(comment);
     }
 }

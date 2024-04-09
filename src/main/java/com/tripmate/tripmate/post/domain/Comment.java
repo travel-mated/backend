@@ -55,7 +55,7 @@ public class Comment extends BaseTimeEntity {
         reply.setParentComment(this);
     }
 
-    public void updateContent(String contents, User user) {
+    public void updateContents(String contents, User user) {
         if (!isOwner(user)) {
             throw new CustomException(HttpStatus.BAD_REQUEST, ResultCode.POST_COMMENT_NOT_WRITER);
         }
