@@ -6,8 +6,8 @@ spring:
         registration:
           kakao:
            client-name : kakao
-           client-id : 8565cbcd7901cbd81614d0dce6184240
-           client-secret : KD5pMfCvNmRQiNnsD2oEyyW6hMyftVLD
+           client-id : ${kakao.client.id}
+           client-secret : ${kakao.client-secret}
            redirect-uri : http://localhost:8080/login/oauth2/code/kakao
            authorization-grant-type : authorization_code
            scope : profile_nickname
@@ -20,3 +20,8 @@ spring:
            token-uri : https://kauth.kakao.com/oauth/token
            user-info-uri : https://kapi.kakao.com/v2/user/me
            user-name-attribute : id
+
+coolsms:
+  api:
+    key: ${coolsms.key}
+    secret: ${coolsms.secret}

@@ -44,7 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if(!existData.isPresent()){
             User newUser = User.builder()
                     .username(username)
-                    .name(oAuth2Response.getName())
+                    .nickname(oAuth2Response.getName())
                     .role("ROLE_USER")
                     .build();
             userRepository.save(newUser);

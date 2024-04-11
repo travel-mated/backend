@@ -22,7 +22,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private static final Long expiredMs = 60 * 60 * 60L;
 
     public CustomSuccessHandler(JWTUtil jwtUtil) {
-
         this.jwtUtil = jwtUtil;
     }
 
