@@ -6,10 +6,7 @@ import com.tripmate.tripmate.common.CustomException;
 import com.tripmate.tripmate.common.ResultCode;
 import com.tripmate.tripmate.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -17,21 +14,23 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostComment extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "POST_COMMENT_ID")
+    @Column(name = "COMMENT_ID")
     private Long id;
 
     private Long postId;
 
     @ManyToOne
-    private PostComment parentComment;
+    private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostComment> childComment = new ArrayList<>();
+    private List<Comment> childComment = new ArrayList<>();
 
     @ManyToOne
     private User user;
@@ -39,31 +38,24 @@ public class PostComment extends BaseTimeEntity {
     @Column(length = 500, nullable = false)
     private String contents;
 
-    @Builder
-    public PostComment(Long postId, PostComment parentComment, List<PostComment> childComment, User user, String contents) {
-        this.postId = postId;
-        this.parentComment = parentComment;
-        this.user = user;
-        this.childComment = childComment;
-        this.contents = contents;
-    }
+    private int likeCount = 0;
 
-    public PostComment(Long postId, User user, String contents) {
+    public Comment(Long postId, User user, String contents) {
         this.postId = postId;
         this.user = user;
         this.contents = contents;
     }
 
-    public void setParentComment(PostComment parentComment) {
+    public void setParentComment(Comment parentComment) {
         this.parentComment = parentComment;
     }
 
-    public void addCommentReply(PostComment reply) {
+    public void addCommentReply(Comment reply) {
         this.childComment.add(reply);
         reply.setParentComment(this);
     }
 
-    public void updateContent(String contents, User user) {
+    public void updateContents(String contents, User user) {
         if (!isOwner(user)) {
             throw new CustomException(HttpStatus.BAD_REQUEST, ResultCode.POST_COMMENT_NOT_WRITER);
         }
@@ -71,5 +63,13 @@ public class PostComment extends BaseTimeEntity {
     }
     public boolean isOwner(User user) {
         return this.user.equals(user);
+    }
+
+    public void increaseLike() {
+        this.likeCount++;
+    }
+
+    public void reduceLike() {
+        this.likeCount--;
     }
 }
