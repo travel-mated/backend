@@ -20,8 +20,8 @@ public class ScrapService {
 
     @Transactional
     public void create(Long postId, Long userId) {
-        Post post = postRepository.getById(postId);
-        User user = userRepository.getById(userId);
+        Post post = postRepository.getPostById(postId);
+        User user = userRepository.getUserById(userId);
 
         scrapRepository.save(Scrap.builder()
                 .post(post)
@@ -31,8 +31,8 @@ public class ScrapService {
 
     @Transactional
     public void delete(Long postId, Long userId) {
-        Post post = postRepository.getById(postId);
-        User user = userRepository.getById(userId);
+        Post post = postRepository.getPostById(postId);
+        User user = userRepository.getUserById(userId);
 
         scrapRepository.deletByPostAndUser(post, user);
     }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    default Comment getById(Long postCommentId) {
+    default Comment getCommentById(Long postCommentId) {
         return findById(postCommentId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ResultCode.POST_COMMENT_NOT_FOUND));
     }
