@@ -19,10 +19,10 @@ public class User {
 
     @Column(unique = true)
     private String username;
+    private String email;
     private String password;
     private AuthType authType;
     private String nickname;
-    private String phoneNumber;
     private int age;
     private Gender gender;
     private Mbti mbti;
@@ -30,12 +30,12 @@ public class User {
 
 
     @Builder
-    private User(String username, String password, AuthType authType, String nickname, String phoneNumber, int age, Gender gender, Mbti mbti, String role) {
+    private User(String username, String email, String password, AuthType authType, String nickname, int age, Gender gender, Mbti mbti, String role) {
         this.username = username;
+        this.email = email;
         this.password = password;
         this.authType = authType;
         this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
         this.age = age;
         this.gender = gender;
         this.mbti = mbti;

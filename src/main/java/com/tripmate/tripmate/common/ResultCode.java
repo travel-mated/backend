@@ -15,11 +15,12 @@ public enum ResultCode {
     NOT_VALIDATION("P200", "json 값이 올바르지 않습니다."),
 
     // P3xx: 인증, 권한에 대한 예외
-    DUPLICATE_PHONE_NUM("P300","중복된 전화번호 입니다."),
-    UNAUTHORIZED_PHONE_NUM("P301","인증되지 않은 전화번호 입니다."),
+    DUPLICATE_EMAIL("P300","중복된 이메일 입니다."),
+    UNAUTHORIZED_EMAIL("P301","인증되지 않은 이메일 입니다."),
     DUPLICATE_USERNAME("P302","중복된 username 입니다."),
     NOT_VALID_ACCESS_TOKEN("P303", "유효하지 않은 access token 입니다."),
-    NOT_VALID_REFRESH_TOKEN("P304", "유효하지 않은 refresh token 입니다.");
+    NOT_VALID_REFRESH_TOKEN("P304", "유효하지 않은 refresh token 입니다."),
+    MAIL_SEND_FAIL("P305", "메일 전송에 실패했습니다.");
 
 
 

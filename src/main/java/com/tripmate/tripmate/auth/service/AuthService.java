@@ -3,15 +3,15 @@ package com.tripmate.tripmate.auth.service;
 import com.tripmate.tripmate.auth.domain.Certification;
 import com.tripmate.tripmate.auth.dto.SignUpDto;
 import com.tripmate.tripmate.auth.repository.CertificationRepository;
-import com.tripmate.tripmate.client.sms.SmsUtil;
-import com.tripmate.tripmate.common.exception.DuplicatePhoneNumException;
+import com.tripmate.tripmate.client.email.EmailProvider;
+import com.tripmate.tripmate.common.exception.DuplicateEmailException;
 import com.tripmate.tripmate.common.exception.DuplicateUsernameException;
+import com.tripmate.tripmate.common.exception.MailSendFailException;
 import com.tripmate.tripmate.common.exception.UnAuthorizedPhoneNumException;
 import com.tripmate.tripmate.user.domain.AuthType;
 import com.tripmate.tripmate.user.domain.User;
 import com.tripmate.tripmate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,38 +23,38 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
-    private final SmsUtil smsUtil;
+    private final EmailProvider emailProvider;
     private final UserRepository userRepository;
     private final CertificationRepository certificationRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public void createCertification(String phoneNum) {
+    public void createCertification(String email) {
         //중복된 번호로 가입시
-        if(checkDuplicatePhoneNum(phoneNum)) throw new DuplicatePhoneNumException();
+        if(checkDuplicateEmail(email)) throw new DuplicateEmailException();
 
         //기존 번호의 인증코드가 있으면 삭제
-        certificationRepository.deleteByPhoneNum(phoneNum);
+        certificationRepository.deleteByPhoneNum(email);
 
         String certificationNum = createCertificationNumber();
         Certification certification = Certification.builder()
                 .certificationNum(certificationNum)
-                .phoneNum(phoneNum)
+                .email(email)
                 .isCheck(false).build();
 
-        SingleMessageSentResponse singleMessageSentResponse = smsUtil.sendOne(phoneNum, certificationNum);
-        System.out.println(singleMessageSentResponse);
+        boolean isEmailSendSuccessful = emailProvider.sendCertificationMail(email, certificationNum);
+        if(!isEmailSendSuccessful) throw new MailSendFailException();
 
         certificationRepository.save(certification);
         System.out.println("저장 수행");
     }
 
     @Transactional
-    public void certifyPhoneNum(String phoneNum, String certificationNum) {
+    public void certifyPhoneNum(String email, String certificationNum) {
         //중복된 번호로 가입시
-        if(checkDuplicatePhoneNum(phoneNum)) throw new DuplicatePhoneNumException();
+        if(checkDuplicateEmail(email)) throw new DuplicateEmailException();
 
-        Optional<Certification> findCertification = certificationRepository.findByPhoneNumAndCertificationNum(phoneNum, certificationNum);
+        Optional<Certification> findCertification = certificationRepository.findByEmailAndCertificationNum(email, certificationNum);
 
         Certification certification = findCertification.orElseThrow(IllegalArgumentException::new);
         certification.check();
@@ -62,7 +62,7 @@ public class AuthService {
 
     @Transactional
     public void signUp(SignUpDto signUpDto, String certificationNum) {
-        Optional<Certification> findCertification = certificationRepository.findByPhoneNumAndCertificationNum(signUpDto.getPhoneNumber(), certificationNum);
+        Optional<Certification> findCertification = certificationRepository.findByEmailAndCertificationNum(signUpDto.getEmail(), certificationNum);
         Certification certification = findCertification.orElseThrow(IllegalArgumentException::new);
         if(!certification.getIsCheck()) throw new UnAuthorizedPhoneNumException();
 
@@ -74,7 +74,7 @@ public class AuthService {
                 .age(signUpDto.getAge())
                 .gender(signUpDto.getGender())
                 .mbti(signUpDto.getMbti())
-                .phoneNumber(signUpDto.getPhoneNumber()).build();
+                .email(signUpDto.getEmail()).build();
         try {
             userRepository.save(newUser);
         } catch (DataIntegrityViolationException e) { //중복된 username인 경우
@@ -82,8 +82,8 @@ public class AuthService {
         }
     }
 
-    public boolean checkDuplicatePhoneNum(String phoneNum) {
-        return userRepository.existsByPhoneNumber(phoneNum);
+    public boolean checkDuplicateEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
 

@@ -2,7 +2,6 @@ package com.tripmate.tripmate.auth.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +15,7 @@ public class Certification {
     @Id
     @GeneratedValue
     Long id;
-    String phoneNum;
+    String email;
     String certificationNum;
     Boolean isCheck;
 
@@ -26,9 +25,9 @@ public class Certification {
     }
 
     @Builder
-    private Certification(Long id, String phoneNum, String certificationNum, boolean isCheck) {
+    private Certification(Long id, String email, String certificationNum, boolean isCheck) {
         this.id = id;
-        this.phoneNum = phoneNum;
+        this.email = email;
         this.certificationNum = certificationNum;
         this.isCheck = isCheck;
     }
