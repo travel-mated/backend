@@ -1,5 +1,6 @@
 package com.tripmate.tripmate.auth.oauth;
 
+import com.tripmate.tripmate.auth.PrincipalDetails;
 import com.tripmate.tripmate.auth.oauth.response.KakaoResponse;
 import com.tripmate.tripmate.auth.oauth.response.OAuth2Response;
 import com.tripmate.tripmate.user.domain.User;
@@ -23,7 +24,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     @Transactional
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public PrincipalDetails loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println("oAuth2유저 : "+oAuth2User);
@@ -50,12 +51,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userRepository.save(newUser);
         }
 
-        UserDto userDto = UserDto.builder()
-                .name(oAuth2Response.getName())
+        User user = User.builder()
                 .username(username)
+                .nickname(oAuth2Response.getName())
                 .role("ROLE_USER")
                 .build();
 
-        return new CustomOAuth2User(userDto);
+        return new PrincipalDetails(user);
     }
 }

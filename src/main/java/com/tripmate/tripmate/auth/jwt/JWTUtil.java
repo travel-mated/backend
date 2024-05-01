@@ -1,11 +1,15 @@
 package com.tripmate.tripmate.auth.jwt;
 
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
@@ -29,12 +33,29 @@ public class JWTUtil {
     }
 
     public Boolean isExpired(String token) {
-
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String username, String role, Long expiredMs) {
+    public String createJwt(String category, String username, String role, Long expiredMs) {
+        return Jwts.builder()
+                .claim("category", category)
+                .claim("username", username)
+                .claim("role", role)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .signWith(secretKey)
+                .compact();
+    }
 
+    public static void setTokenToCookie(HttpServletResponse response, String jwtToken) throws UnsupportedEncodingException {
+        jwtToken = URLEncoder.encode(JwtProperties.TOKEN_PREFIX+ jwtToken, "utf-8");
+        Cookie cookie = new Cookie(JwtProperties.HEADER_STRING, jwtToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(JwtProperties.EXPIRATION_TIME);
+        response.addCookie(cookie);
+    }
+
+    public String createJwt(String username, String role, Long expiredMs) {
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)
@@ -42,5 +63,11 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
+    }
+
+
+
+    public String getCategory(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 }

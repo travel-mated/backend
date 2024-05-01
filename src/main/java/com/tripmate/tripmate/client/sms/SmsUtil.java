@@ -1,4 +1,4 @@
-package com.tripmate.tripmate.auth.sms;
+package com.tripmate.tripmate.client.sms;
 
 import jakarta.annotation.PostConstruct;
 import net.nurigo.sdk.NurigoApp;

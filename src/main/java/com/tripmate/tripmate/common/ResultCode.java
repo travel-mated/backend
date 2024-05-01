@@ -17,7 +17,13 @@ public enum ResultCode {
     // P3xx: 인증, 권한에 대한 예외
     DUPLICATE_PHONE_NUM("P300","중복된 전화번호 입니다."),
     UNAUTHORIZED_PHONE_NUM("P301","인증되지 않은 전화번호 입니다."),
-    DUPLICATE_USERNAME("P302","중복된 username(id) 입니다.");
+    DUPLICATE_USERNAME("P302","중복된 username 입니다."),
+    NOT_VALID_ACCESS_TOKEN("P303", "유효하지 않은 access token 입니다."),
+    NOT_VALID_REFRESH_TOKEN("P304", "유효하지 않은 refresh token 입니다.");
+
+
+
+
 
     // P4xx: 유저 예외
 

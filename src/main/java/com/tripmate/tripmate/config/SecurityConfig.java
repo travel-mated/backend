@@ -1,18 +1,24 @@
 package com.tripmate.tripmate.config;
 
-import com.tripmate.tripmate.auth.jwt.JWTFilter;
+import com.tripmate.tripmate.auth.jwt.CustomLogoutFilter;
+import com.tripmate.tripmate.auth.jwt.JwtAuthenticationFilter;
+import com.tripmate.tripmate.auth.jwt.JwtAuthorizationFilter;
 import com.tripmate.tripmate.auth.jwt.JWTUtil;
 import com.tripmate.tripmate.auth.oauth.CustomOAuth2UserService;
-import com.tripmate.tripmate.auth.CustomSuccessHandler;
+import com.tripmate.tripmate.auth.oauth.OauthCustomSuccessHandler;
+import com.tripmate.tripmate.auth.repository.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -24,9 +30,17 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomSuccessHandler customSuccessHandler;
+    private final OauthCustomSuccessHandler oauthCustomSuccessHandler;
     private final JWTUtil jwtUtil;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final String loginUrl = "/api/auth/login";
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+
+        return configuration.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -63,10 +77,24 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
-        //JWTFilter 추가
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
+        //JwtAuthorizationFilter 추가
+
+        http
+                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil), JwtAuthenticationFilter.class);
+
+        //JwtAuthenticationFilter 추가
+
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository);
+
+        jwtAuthenticationFilter.setFilterProcessesUrl(loginUrl);
+
+        //CustomLogoutFilter 추가
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
+
+        http
+                .addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         //oauth2
         http
@@ -74,7 +102,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfoEndpointConfig ->
                                 userInfoEndpointConfig.userService(customOAuth2UserService)
                         )
-                        .successHandler(customSuccessHandler)
+                        .successHandler(oauthCustomSuccessHandler)
                 );
 
         //경로별 인가 작업

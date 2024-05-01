@@ -3,7 +3,7 @@ package com.tripmate.tripmate.auth.service;
 import com.tripmate.tripmate.auth.domain.Certification;
 import com.tripmate.tripmate.auth.dto.SignUpDto;
 import com.tripmate.tripmate.auth.repository.CertificationRepository;
-import com.tripmate.tripmate.auth.sms.SmsUtil;
+import com.tripmate.tripmate.client.sms.SmsUtil;
 import com.tripmate.tripmate.common.exception.DuplicatePhoneNumException;
 import com.tripmate.tripmate.common.exception.DuplicateUsernameException;
 import com.tripmate.tripmate.common.exception.UnAuthorizedPhoneNumException;
