@@ -6,10 +6,10 @@ import lombok.Getter;
 public enum ResultCode {
 
     // 정상 처리
-    OK("P000", "요청 정상 처리"),
+    OK("T000", "요청 정상 처리"),
 
     // 서버 내부 에러 (5xx 에러)
-    INTERNAL_SERVER_ERROR("P100", "서버 에러 발생"),
+    INTERNAL_SERVER_ERROR("T100", "서버 에러 발생"),
 
     // F2xx: JSon 값 예외
     NOT_VALIDATION("P200", "json 값이 올바르지 않습니다."),
@@ -20,13 +20,21 @@ public enum ResultCode {
     DUPLICATE_USERNAME("P302","중복된 username 입니다."),
     NOT_VALID_ACCESS_TOKEN("P303", "유효하지 않은 access token 입니다."),
     NOT_VALID_REFRESH_TOKEN("P304", "유효하지 않은 refresh token 입니다."),
-    MAIL_SEND_FAIL("P305", "메일 전송에 실패했습니다.");
+    MAIL_SEND_FAIL("P305", "메일 전송에 실패했습니다."),
 
 
 
 
+    // T4xx: 유저 예외
+    USER_NOT_FOUND("T400", "존재하지 않는 유저입니다."),
 
-    // P4xx: 유저 예외
+    //T5xx: 댓글 예외
+    POST_COMMENT_NOT_FOUND("T500", "존재하지 않은 게시글 댓글입니다."),
+    POST_COMMENT_NOT_WRITER("T501", "게시글 댓글 작성자가 아닙니다."),
+
+    //T6xx: 게시글 예외
+    POST_NOT_FOUND("T600", "존재하지 않은 게시글입니다.");
+
 
     private final String code;
     private final String message;
