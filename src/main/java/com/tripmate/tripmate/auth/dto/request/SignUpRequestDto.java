@@ -12,18 +12,18 @@ public class SignUpRequestDto {
     private String username;
     private String password;
     private String nickname;
-    private String phoneNumber;
+    private String email;
     private int age;
     private Gender gender;
     private Mbti mbti;
     String certificationNum;
 
     @Builder
-    private SignUpRequestDto(String username, String password, String nickname, String phoneNumber, int age, Gender gender, Mbti mbti, String certificationNum) {
+    private SignUpRequestDto(String username, String password, String nickname, String email, int age, Gender gender, Mbti mbti, String certificationNum) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.age = age;
         this.gender = gender;
         this.mbti = mbti;

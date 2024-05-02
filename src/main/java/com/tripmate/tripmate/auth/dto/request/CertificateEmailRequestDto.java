@@ -4,7 +4,7 @@ package com.tripmate.tripmate.auth.dto.request;
 import lombok.Getter;
 
 @Getter
-public class CertificatePhoneNumRequestDto {
+public class CertificateEmailRequestDto {
 
-    String phoneNum;
+    String email;
 }

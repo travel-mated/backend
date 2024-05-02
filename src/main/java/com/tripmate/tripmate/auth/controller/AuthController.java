@@ -3,26 +3,19 @@ package com.tripmate.tripmate.auth.controller;
 
 import com.tripmate.tripmate.auth.domain.RefreshToken;
 import com.tripmate.tripmate.auth.dto.SignUpDto;
-import com.tripmate.tripmate.auth.dto.request.CertificatePhoneNumRequestDto;
-import com.tripmate.tripmate.auth.dto.request.CertifyPhoneNumRequestDto;
+import com.tripmate.tripmate.auth.dto.request.CertificateEmailRequestDto;
+import com.tripmate.tripmate.auth.dto.request.CertifyEmailRequestDto;
 import com.tripmate.tripmate.auth.dto.request.SignUpRequestDto;
 import com.tripmate.tripmate.auth.jwt.JWTUtil;
-import com.tripmate.tripmate.auth.jwt.JwtProperties;
 import com.tripmate.tripmate.auth.repository.RefreshTokenRepository;
 import com.tripmate.tripmate.auth.service.AuthService;
-import com.tripmate.tripmate.common.CustomException;
 import com.tripmate.tripmate.common.ResponseForm;
-import com.tripmate.tripmate.common.exception.NotValidAccessTokenException;
 import com.tripmate.tripmate.common.exception.NotValidRefreshTokenException;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.apache.tomcat.websocket.AuthenticationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -39,14 +32,14 @@ public class AuthController {
     private final JWTUtil jwtUtil;
 
     @PostMapping("/certification/generate")
-    public ResponseForm<String> createCertificate(@RequestBody CertificatePhoneNumRequestDto request) {
-        authService.createCertification(request.getPhoneNum());
+    public ResponseForm<String> createCertificate(@RequestBody CertificateEmailRequestDto request) {
+        authService.createCertification(request.getEmail());
         return new ResponseForm<>();
     }
 
     @PostMapping("/certification/certify")
-    public ResponseForm certify(@RequestBody CertifyPhoneNumRequestDto request) {
-        authService.certifyPhoneNum(request.getPhoneNum(), request.getCertificationNum());
+    public ResponseForm certify(@RequestBody CertifyEmailRequestDto request) {
+        authService.certifyPhoneNum(request.getEmail(), request.getCertificationNum());
         return new ResponseForm();
     }
 
@@ -119,7 +112,7 @@ public class AuthController {
                 .gender(requestDto.getGender())
                 .mbti(requestDto.getMbti())
                 .nickname(requestDto.getNickname())
-                .phoneNumber(requestDto.getPhoneNumber())
+                .email(requestDto.getEmail())
                 .password(requestDto.getPassword()).build();
     }
 

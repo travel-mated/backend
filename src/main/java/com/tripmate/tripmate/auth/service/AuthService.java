@@ -34,7 +34,7 @@ public class AuthService {
         if(checkDuplicateEmail(email)) throw new DuplicateEmailException();
 
         //기존 번호의 인증코드가 있으면 삭제
-        certificationRepository.deleteByPhoneNum(email);
+        certificationRepository.deleteByEmail(email);
 
         String certificationNum = createCertificationNumber();
         Certification certification = Certification.builder()

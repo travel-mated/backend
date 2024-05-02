@@ -53,14 +53,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             e.printStackTrace();
             throw new RuntimeException("Failed to read JSON from request body", e);
         }
-        String loginId = userLoginDto.getUsername();
+        String username = userLoginDto.getUsername();
         String password = userLoginDto.getPassword();
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginId, password);
 
-        System.out.println("JwtAuthenticationFilter : 토큰생성완료");
-        System.out.println(authenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, password);
+
 
         // PrincipalDetailsService의 loadUserByUsername() 실행
         // DB에 있는 username 과 password 가 일치한다.
@@ -73,13 +72,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         if (this.postOnly && !request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
-        String username = obtainUsername(request);
-        username = (username != null) ? username.trim() : "";
-        password = obtainPassword(request);
-        password = (password != null) ? password : "";
+
         UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(username,
                 password);
-        // Allow subclasses to set the "details" property
         setDetails(request, authRequest);
         return authentication;
         /**
@@ -124,7 +119,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         /**
          *  임시 redirect 주소
          */
-        response.sendRedirect("http://localhost:3000/");
+//        response.sendRedirect("http://localhost:3000/");
     }
 
     private Cookie createCookie(String key, String value) {

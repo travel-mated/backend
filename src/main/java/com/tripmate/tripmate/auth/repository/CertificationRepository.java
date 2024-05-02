@@ -12,5 +12,5 @@ public interface CertificationRepository extends JpaRepository<Certification, Lo
 
     Optional<Certification> findByEmailAndCertificationNum(String email, String certificationNum);
 
-    void deleteByPhoneNum(String phoneNum);
+    void deleteByEmail(String email);
 }
