@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
@@ -14,4 +17,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         return findById(postCommentId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ResultCode.POST_COMMENT_NOT_FOUND));
     }
+
+    List<Comment> findAllByPostId(Long postId);
+
+    List<Comment> findAllByPostIdAndParentCommentIdIsNull(Long postId);
 }

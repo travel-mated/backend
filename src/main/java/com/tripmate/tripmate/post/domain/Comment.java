@@ -9,9 +9,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Builder
@@ -28,9 +25,6 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne
     private Comment parentComment;
-
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> childComment = new ArrayList<>();
 
     @ManyToOne
     private User user;
@@ -50,10 +44,6 @@ public class Comment extends BaseTimeEntity {
         this.parentComment = parentComment;
     }
 
-    public void addCommentReply(Comment reply) {
-        this.childComment.add(reply);
-        reply.setParentComment(this);
-    }
 
     public void updateContents(String contents, User user) {
         if (!isOwner(user)) {
@@ -61,6 +51,7 @@ public class Comment extends BaseTimeEntity {
         }
         this.contents = contents;
     }
+
     public boolean isOwner(User user) {
         return this.user.equals(user);
     }
