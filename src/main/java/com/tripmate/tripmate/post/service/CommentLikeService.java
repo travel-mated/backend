@@ -21,8 +21,8 @@ public class CommentLikeService {
 
     @Transactional
     public void create(Long commentId, Long userId) {
-        Comment comment = commentRepository.getById(commentId);
-        User user = userRepository.getById(userId);
+        Comment comment = commentRepository.getCommentById(commentId);
+        User user = userRepository.getUserById(userId);
 
         comment.increaseLike();
         commentLikeRepository.save(CommentLike.builder()
@@ -33,8 +33,8 @@ public class CommentLikeService {
 
     @Transactional
     public void delete(Long commentId, Long userId) {
-        Comment comment = commentRepository.getById(commentId);
-        User user = userRepository.getById(userId);
+        Comment comment = commentRepository.getCommentById(commentId);
+        User user = userRepository.getUserById(userId);
 
         comment.reduceLike();
         commentLikeRepository.deletByCommentAndUser(comment, user);
@@ -42,7 +42,7 @@ public class CommentLikeService {
 
     @Transactional
     public CommentLikeResponse get(Long commentId) {
-        Comment comment = commentRepository.getById(commentId);
+        Comment comment = commentRepository.getCommentById(commentId);
         return new CommentLikeResponse(comment.getLikeCount());
     }
 }

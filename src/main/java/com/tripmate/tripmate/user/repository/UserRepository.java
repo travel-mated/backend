@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    default User getById(Long userId) {
+    default User getUserById(Long userId) {
         return findById(userId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ResultCode.USER_NOT_FOUND));
     }
