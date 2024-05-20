@@ -38,3 +38,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Ignore env.properties file
+env.properties
+.env

@@ -1,13 +1,16 @@
 package com.tripmate.tripmate.user.repository;
 
 
-import com.tripmate.tripmate.common.CustomException;
-import com.tripmate.tripmate.common.ResultCode;
 import com.tripmate.tripmate.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User,Long> {
+
+    Optional<User> findByUsername(String username);
+    boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
 
     default User getUserById(Long userId) {
         return findById(userId)
