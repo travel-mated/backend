@@ -1,4 +1,4 @@
-package com.tripmate.tripmate.schedule;
+package com.tripmate.tripmate.travelplan;
 
 import jakarta.persistence.*;
 import lombok.*;
