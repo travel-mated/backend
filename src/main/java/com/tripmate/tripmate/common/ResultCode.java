@@ -11,10 +11,18 @@ public enum ResultCode {
     // 서버 내부 에러 (5xx 에러)
     INTERNAL_SERVER_ERROR("T100", "서버 에러 발생"),
 
-    // T2xx: JSon 값 예외
-    NOT_VALIDATION("T200", "json 값이 올바르지 않습니다."),
+    // F2xx: JSon 값 예외
+    NOT_VALIDATION("P200", "json 값이 올바르지 않습니다."),
 
-    // T3xx: 인증, 권한에 대한 예외
+    // P3xx: 인증, 권한에 대한 예외
+    DUPLICATE_EMAIL("P300","중복된 이메일 입니다."),
+    UNAUTHORIZED_EMAIL("P301","인증되지 않은 이메일 입니다."),
+    DUPLICATE_USERNAME("P302","중복된 username 입니다."),
+    NOT_VALID_ACCESS_TOKEN("P303", "유효하지 않은 access token 입니다."),
+    NOT_VALID_REFRESH_TOKEN("P304", "유효하지 않은 refresh token 입니다."),
+    MAIL_SEND_FAIL("P305", "메일 전송에 실패했습니다."),
+
+
 
 
     // T4xx: 유저 예외

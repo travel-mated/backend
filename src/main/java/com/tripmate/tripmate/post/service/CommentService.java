@@ -36,7 +36,7 @@ public class CommentService {
                                   final Long postId,
                                   final CommentRequest request) {
         validateExistPost(postId);
-        User user = userRepository.getById(userId);
+        User user = userRepository.getUserById(userId);
         Comment comment = new Comment(postId, user, request.contents());
 
         if (hasParentComment(request.parentCommentId())) {
@@ -59,8 +59,8 @@ public class CommentService {
 
     @Transactional
     public void delete(final Long userId, final Long postCommentId) {
-        User user = userRepository.getById(userId);
-        Comment comment = commentRepository.getById(postCommentId);
+        User user = userRepository.getUserById(userId);
+        Comment comment = commentRepository.getCommentById(postCommentId);
 
         validateSameOwner(user, comment);
         commentRepository.delete(comment);
@@ -76,8 +76,8 @@ public class CommentService {
     public CommentResponse update(final Long userId,
                                   final Long postCommentId,
                                   final CommentRequest request) {
-        User user = userRepository.getById(userId);
-        Comment comment = commentRepository.getById(postCommentId);
+        User user = userRepository.getUserById(userId);
+        Comment comment = commentRepository.getCommentById(postCommentId);
         comment.updateContents(request.contents(), user);
         return CommentResponse.from(comment);
     }
