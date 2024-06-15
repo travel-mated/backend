@@ -47,7 +47,7 @@ class CommentTest {
 
         comment.addCommentReply(comment2);
 
-        Assertions.assertThat(comment.getChildComment()).contains(comment2);
+        Assertions.assertThat(comment.getChildComments()).contains(comment2);
         Assertions.assertThat(comment2.getParentComment()).isEqualTo(comment);
 
     }
@@ -62,7 +62,7 @@ class CommentTest {
         return Comment.builder()
                 .contents("test contents")
                 .user(user)
-                .childComment(new ArrayList<>())
+                .childComments(new ArrayList<>())
                 .build();
     }
 }
