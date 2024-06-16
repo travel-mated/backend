@@ -32,3 +32,9 @@ logging:
   level:
     org.hibernate.SQL: debug
 
+
+fcm:
+  key:
+    path: Firebase에서받은키.json
+    scope: https://www.googleapis.com/auth/cloud-platfor
+

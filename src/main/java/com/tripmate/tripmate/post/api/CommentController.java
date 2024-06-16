@@ -3,6 +3,7 @@ package com.tripmate.tripmate.post.api;
 import com.tripmate.tripmate.common.ResponseForm;
 import com.tripmate.tripmate.post.dto.request.CommentRequest;
 import com.tripmate.tripmate.post.dto.response.CommentResponse;
+import com.tripmate.tripmate.post.dto.response.CommentPageResponse;
 import com.tripmate.tripmate.post.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService commentService;
+
+    @GetMapping
+    public ResponseForm<CommentPageResponse> get(@PathVariable("post-id") Long postId) {
+        return new ResponseForm<>(commentService.get(postId));
+    }
 
     @PostMapping
     public ResponseForm<CommentResponse> create(@PathVariable("post-id") Long postId,
