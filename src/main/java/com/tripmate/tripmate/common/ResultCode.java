@@ -33,9 +33,12 @@ public enum ResultCode {
     POST_COMMENT_NOT_WRITER("T501", "게시글 댓글 작성자가 아닙니다."),
 
     //T6xx: 게시글 예외
-    POST_NOT_FOUND("T600", "존재하지 않은 게시글입니다.");
+    POST_NOT_FOUND("T600", "존재하지 않은 게시글입니다."),
 
 
+    //T8xx: 채팅 예외
+    CHATROOM_NOT_FOUND("T800", "존재하지 않은 채팅방입니다.")
+    ;
     private final String code;
     private final String message;
 

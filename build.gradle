@@ -44,6 +44,8 @@ dependencies {
 	//SMS
 	implementation 'net.nurigo:sdk:4.3.0'
 
+	//websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	//Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
