@@ -5,6 +5,7 @@ import com.tripmate.tripmate.common.ResultCode;
 import com.tripmate.tripmate.post.domain.Comment;
 import com.tripmate.tripmate.post.dto.request.CommentRequest;
 import com.tripmate.tripmate.post.dto.response.CommentResponse;
+import com.tripmate.tripmate.post.dto.response.CommentPageResponse;
 import com.tripmate.tripmate.post.repository.CommentRepository;
 import com.tripmate.tripmate.post.repository.PostRepository;
 import com.tripmate.tripmate.user.domain.User;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -21,6 +24,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+
+    @Transactional(readOnly = true)
+    public CommentPageResponse get(Long postId) {
+        List<Comment> comments = commentRepository.findAllByPostId(postId);
+        return CommentPageResponse.from(comments);
+    }
 
     @Transactional
     public CommentResponse create(final Long userId,
@@ -31,8 +40,8 @@ public class CommentService {
         Comment comment = new Comment(postId, user, request.contents());
 
         if (hasParentComment(request.parentCommentId())) {
-            Comment parentComment = commentRepository.getCommentById(request.parentCommentId());
-            parentComment.addCommentReply(comment);
+            Comment parentComment = commentRepository.getById(request.parentCommentId());
+            parentComment.setParentComment(parentComment);
         }
 
         return CommentResponse.from(commentRepository.save(comment));
